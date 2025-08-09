@@ -34,6 +34,15 @@ class Connect4JFrame extends JFrame implements ActionListener {
     public static final int MAXROW = 6;     // 6 rows
     public static final int MAXCOL = 7;     // 7 columns
 
+    int redMoves = 0;
+    int yellowMoves = 0;
+    int totalMoves = 0;
+
+    private Label redMovesLabel;
+    private Label yellowMovesLabel;
+    private Label totalMovesLabel;
+
+
     public static final String SPACE = "                  "; // 18 spaces
 
     int activeColour = RED;
@@ -58,6 +67,18 @@ class Connect4JFrame extends JFrame implements ActionListener {
         optMenu.add(yellowMI);
         mbar.add(optMenu);
         setMenuBar(mbar);
+
+
+        Panel statsPanel = new Panel();
+        redMovesLabel = new Label("Red Moves: 0");
+        yellowMovesLabel = new Label("yellow Moves: 0");
+        totalMovesLabel = new Label("total Moves: 0");
+
+        statsPanel.add(redMovesLabel);
+        statsPanel.add(yellowMovesLabel);
+        statsPanel.add(totalMovesLabel);
+
+        add(statsPanel, BorderLayout.SOUTH);
 
         // Build control panel.
         Panel panel = new Panel();
@@ -114,6 +135,14 @@ class Connect4JFrame extends JFrame implements ActionListener {
             for (int col=0; col<MAXCOL; col++)
                 theArray[row][col]=BLANK;
         gameStart=false;
+
+        redMoves = 0;
+        yellowMoves = 0;
+        totalMoves = 0;
+
+        redMovesLabel.setText("Red Moves: 0");
+        yellowMovesLabel.setText("Yellow Moves: 0");
+        totalMovesLabel.setText("Total Moves: 0");
     } // initialize
 
     public void paint(Graphics g) {
@@ -140,10 +169,20 @@ class Connect4JFrame extends JFrame implements ActionListener {
             if (theArray[row][n]>0) break;
         if (row>0) {
             theArray[--row][n]=activeColour;
-            if (activeColour==RED)
+            if (activeColour==RED) {
                 activeColour=YELLOW;
-            else
+                yellowMoves++;
+            } else {
                 activeColour=RED;
+                redMoves++;
+            }
+            totalMoves++;
+
+            redMovesLabel.setText("Red Moves: " + redMoves);
+            yellowMovesLabel.setText("Yellow Moves: " + yellowMoves);
+            totalMovesLabel.setText("Total Moves: " + totalMoves);
+
+
             repaint();
         }
     }
