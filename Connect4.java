@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 import javax.swing.*;
 
 public class Connect4 {
@@ -27,6 +28,7 @@ class Connect4JFrame extends JFrame implements ActionListener {
     private Button[] btn = new Button[MAXCOL];
     private Label lblSpacer;
     MenuItem newMI, exitMI, redMI, yellowMI;
+    MenuItem randomPlayer;
     Color[][] theArray;
     boolean end = false;
     boolean gameStart;
@@ -61,6 +63,11 @@ class Connect4JFrame extends JFrame implements ActionListener {
         yellowMI = new MenuItem("Yellow starts");
         yellowMI.addActionListener(this);
         optMenu.add(yellowMI);
+
+        randomPlayer = new MenuItem("Random player");
+        randomPlayer.addActionListener(this);
+        optMenu.add(randomPlayer);
+
         mbar.add(optMenu);
         setMenuBar(mbar);
 
@@ -224,6 +231,31 @@ class Connect4JFrame extends JFrame implements ActionListener {
             if (!gameStart) activeColour = Color.RED;
         } else if (e.getSource() == yellowMI) {
             if (!gameStart) activeColour = Color.YELLOW;
+        } else if (e.getSource() == randomPlayer) {
+
+            Connect4JFrame correctClass = this;
+
+            Random rnd = new Random(69);
+
+            Thread th = new Thread() {
+                @Override
+                public void run() {
+                    while (!end) {
+
+                        Color yourColor = activeColour;
+
+                        SwingUtilities.invokeLater(() -> correctClass.putDisk(rnd.nextInt(0, 7)));
+
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+            };
+
+            th.start();
 
         }
     }
